@@ -245,6 +245,18 @@ type TimelineCommentThread = {
   replies: TimelineCommentItem[];
 };
 
+type TimelineCommitItem = {
+  sha: string;
+  url: string;
+  message: string;
+  authorName: string;
+  authoredAt?: string;
+};
+
+type TimelineEntry =
+  | { kind: 'commit'; key: string; createdAt?: string; commit: TimelineCommitItem }
+  | { kind: 'comment'; key: string; createdAt?: string; thread: TimelineCommentThread };
+
 type ChatDispatchTarget = {
   sessionId: string;
   providerID: string;
@@ -754,6 +766,41 @@ export const PullRequestSection: React.FC<{
 
     return topLevel;
   }, [timelineComments]);
+
+  const timelineEntries = React.useMemo<TimelineEntry[]>(() => {
+    const commitEntries = (commentsDetails?.commits ?? []).map((commit) => ({
+      kind: 'commit' as const,
+      key: `commit-${commit.sha}`,
+      createdAt: commit.authoredAt,
+      commit: {
+        sha: commit.sha,
+        url: commit.url,
+        message: commit.message,
+        authorName: commit.author?.login || t('gitView.pr.comments.unknownAuthor'),
+        authoredAt: commit.authoredAt,
+      },
+    }));
+
+    const commentEntries = commentThreads.map((thread) => ({
+      kind: 'comment' as const,
+      key: thread.comment.id,
+      createdAt: thread.comment.createdAt,
+      thread,
+    }));
+
+    const entries = [...commitEntries, ...commentEntries];
+    entries.sort((a, b) => {
+      const aTs = a.createdAt ? Date.parse(a.createdAt) : 0;
+      const bTs = b.createdAt ? Date.parse(b.createdAt) : 0;
+      const aVal = Number.isFinite(aTs) ? aTs : 0;
+      const bVal = Number.isFinite(bTs) ? bTs : 0;
+      if (aVal !== bVal) {
+        return aVal - bVal;
+      }
+      return a.key.localeCompare(b.key);
+    });
+    return entries;
+  }, [commentThreads, commentsDetails?.commits, t]);
 
   const resolveChatDispatchTarget = React.useCallback((): ChatDispatchTarget | null => {
     if (!currentSessionId) {
@@ -1707,44 +1754,6 @@ export const PullRequestSection: React.FC<{
                     ) : null}
 
                     <div ref={commentsSectionRef} className="mt-5 space-y-5">
-                      {(commentsDetails?.commits?.length ?? 0) > 0 ? (
-                        <div className="space-y-3">
-                          <div className="typography-ui-label text-foreground">{t('gitView.history.commitsPlaceholder')}</div>
-                          <div className="relative pl-3">
-                            {commentsDetails?.commits?.map((commit, idx, commits) => {
-                              const subject = commit.message.split('\n', 1)[0] || commit.sha.slice(0, 7);
-                              const author = commit.author?.login || t('gitView.pr.comments.unknownAuthor');
-                              const isLast = idx === commits.length - 1;
-                              return (
-                                <div key={commit.sha} className="relative min-h-8 pl-10 pb-4 last:pb-0">
-                                  {!isLast ? <div className="absolute left-4 top-8 bottom-0 w-px bg-border/60" /> : null}
-                                  <button
-                                    type="button"
-                                    className="absolute left-0 top-0 z-10 flex size-8 items-center justify-center rounded-full border border-border/60 bg-[var(--surface-elevated)] text-muted-foreground hover:bg-[var(--interactive-hover)] hover:text-foreground"
-                                    onClick={() => void openExternal(commit.url)}
-                                    aria-label={t('gitView.pr.actions.openOnGitHubAria')}
-                                  >
-                                    <Icon name="git-commit" className="size-4" />
-                                  </button>
-                                  <div className="flex min-h-8 flex-wrap items-center gap-x-2 gap-y-0.5 py-1 typography-micro">
-                                    <button
-                                      type="button"
-                                      className="min-w-0 truncate text-left text-foreground hover:text-[var(--primary-base)]"
-                                      onClick={() => void openExternal(commit.url)}
-                                    >
-                                      {subject}
-                                    </button>
-                                    <span className="font-mono text-muted-foreground">{commit.sha.slice(0, 7)}</span>
-                                    <span className="text-muted-foreground">{author}</span>
-                                    {commit.authoredAt ? <span className="text-muted-foreground">{formatTimestamp(commit.authoredAt)}</span> : null}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      ) : null}
-
                       <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
                           <div className="typography-ui-label text-foreground">{t('gitView.pr.comments.title')}</div>
@@ -1779,16 +1788,47 @@ export const PullRequestSection: React.FC<{
                         </div>
                       ) : (
                         <div className="space-y-5">
-                            {commentThreads.length > 0 ? (
+                            {timelineEntries.length > 0 ? (
                               <div className="relative pl-3">
                                 <div>
-                                  {commentThreads.map((thread, idx) => {
+                                  {timelineEntries.map((entry, idx) => {
+                                    const isLast = idx === timelineEntries.length - 1;
+                                    if (entry.kind === 'commit') {
+                                      const commit = entry.commit;
+                                      const subject = commit.message.split('\n', 1)[0] || commit.sha.slice(0, 7);
+                                      return (
+                                        <div key={entry.key} className="relative min-h-8 pl-10 pb-4 last:pb-0">
+                                          {!isLast ? <div className="absolute left-4 top-8 bottom-0 w-px bg-border/60" /> : null}
+                                          <button
+                                            type="button"
+                                            className="absolute left-0 top-0 z-10 flex size-8 items-center justify-center rounded-full border border-border/60 bg-[var(--surface-elevated)] text-muted-foreground hover:bg-[var(--interactive-hover)] hover:text-foreground"
+                                            onClick={() => void openExternal(commit.url)}
+                                            aria-label={t('gitView.pr.actions.openOnGitHubAria')}
+                                          >
+                                            <Icon name="git-commit" className="size-4" />
+                                          </button>
+                                          <div className="flex min-h-8 flex-wrap items-center gap-x-2 gap-y-0.5 py-1 typography-micro">
+                                            <button
+                                              type="button"
+                                              className="min-w-0 truncate text-left text-foreground hover:text-[var(--primary-base)]"
+                                              onClick={() => void openExternal(commit.url)}
+                                            >
+                                              {subject}
+                                            </button>
+                                            <span className="font-mono text-muted-foreground">{commit.sha.slice(0, 7)}</span>
+                                            <span className="text-muted-foreground">{commit.authorName}</span>
+                                            {commit.authoredAt ? <span className="text-muted-foreground">{formatTimestamp(commit.authoredAt)}</span> : null}
+                                          </div>
+                                        </div>
+                                      );
+                                    }
+
+                                    const thread = entry.thread;
                                     const comment = thread.comment;
                                     const initial = (comment.authorName || '?').charAt(0).toUpperCase();
-                                    const isLast = idx === commentThreads.length - 1;
                                     const replyOpen = pendingReplyCommentId === comment.rawId;
                                     return (
-                                      <div key={comment.id} className="relative pl-10 pb-5 last:pb-0">
+                                      <div key={entry.key} className="relative pl-10 pb-5 last:pb-0">
                                         {!isLast ? <div className="absolute left-4 top-[2.375rem] bottom-[0.375rem] w-px bg-border/60" /> : null}
                                         <div className="absolute left-0 top-0 z-10 flex size-8 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-[var(--surface-elevated)] text-xs text-muted-foreground">
                                           {comment.avatarUrl ? (
