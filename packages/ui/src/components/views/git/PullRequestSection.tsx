@@ -505,6 +505,7 @@ export const PullRequestSection: React.FC<{
   const loadedCommentsKeyRef = React.useRef<string | null>(null);
   const commentsSectionRef = React.useRef<HTMLDivElement | null>(null);
   const newCommentInputRef = React.useRef<HTMLTextAreaElement | null>(null);
+  const replyInputRef = React.useRef<HTMLTextAreaElement | null>(null);
 
   // Auto-enable detected upstream when there's no explicit upstream remote
   React.useEffect(() => {
@@ -525,6 +526,18 @@ export const PullRequestSection: React.FC<{
   const isHydratingCurrentPrBody = Boolean(
     currentPrBodyHydrationKey && hydratingPrBodyKey === currentPrBodyHydrationKey,
   );
+
+  React.useEffect(() => {
+    if (pendingReplyCommentId === null) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      replyInputRef.current?.focus();
+      const length = replyInputRef.current?.value.length ?? 0;
+      replyInputRef.current?.setSelectionRange(length, length);
+    }, 0);
+  }, [pendingReplyCommentId]);
 
   React.useEffect(() => {
     if (!github?.prContext || !pr) {
@@ -1933,6 +1946,7 @@ export const PullRequestSection: React.FC<{
                                           {replyOpen ? (
                                             <div className="space-y-2 rounded-lg border border-border/40 bg-[var(--surface-elevated)]/70 p-3">
                                               <Textarea
+                                                ref={replyInputRef}
                                                 value={replyBody}
                                                 onChange={(e) => setReplyBody(e.target.value)}
                                                 className="min-h-[88px] bg-transparent"

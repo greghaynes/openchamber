@@ -1927,8 +1927,6 @@ export const dict: Record<I18nKey, string> = {
   'gitView.pr.actions.mergePrAria': 'Scal pull request',
   'gitView.pr.actions.openChecks': 'Otwórz checki',
   'gitView.pr.actions.openChecksAria': 'Otwórz nieudane checki',
-  'gitView.pr.actions.openComments': 'Otwórz komentarze',
-  'gitView.pr.actions.openCommentsAria': 'Otwórz komentarze do pull requesta',
   'gitView.pr.actions.reply': 'Odpowiedz',
   'gitView.pr.actions.replyAria': 'Odpowiedz na komentarz',
   'gitView.pr.actions.openOnGitHub': 'Otwórz w GitHub',

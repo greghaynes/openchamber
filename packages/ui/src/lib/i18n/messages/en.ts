@@ -880,8 +880,6 @@ export const dict = {
   'gitView.pr.actions.mergePrAria': 'Merge pull request',
   'gitView.pr.actions.openChecks': 'Open checks',
   'gitView.pr.actions.openChecksAria': 'Open failed checks',
-  'gitView.pr.actions.openComments': 'Open comments',
-  'gitView.pr.actions.openCommentsAria': 'Open pull request comments',
   'gitView.pr.actions.openOnGitHub': 'Open on GitHub',
   'gitView.pr.actions.openOnGitHubAria': 'Open pull request on GitHub',
   'gitView.pr.actions.openSettings': 'Open settings',

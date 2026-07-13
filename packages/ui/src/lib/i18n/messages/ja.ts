@@ -876,8 +876,6 @@ export const dict: Record<I18nKey, string> = {
   'gitView.pr.actions.mergePrAria': 'プルリクエストをマージ',
   'gitView.pr.actions.openChecks': 'チェックを開く',
   'gitView.pr.actions.openChecksAria': '失敗したチェックを開く',
-  'gitView.pr.actions.openComments': 'コメントを開く',
-  'gitView.pr.actions.openCommentsAria': 'プルリクエストのコメントを開く',
   'gitView.pr.actions.reply': '返信',
   'gitView.pr.actions.replyAria': 'コメントに返信',
   'gitView.pr.actions.openOnGitHub': 'GitHubで開く',

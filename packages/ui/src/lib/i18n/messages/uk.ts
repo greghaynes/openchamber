@@ -880,8 +880,6 @@ export const dict: Record<I18nKey, string> = {
   "gitView.pr.actions.mergePrAria": "Злити PR",
   "gitView.pr.actions.openChecks": "Відкрити перевірки",
   "gitView.pr.actions.openChecksAria": "Відкрити невдалі перевірки",
-  "gitView.pr.actions.openComments": "Відкрити коментарі",
-  "gitView.pr.actions.openCommentsAria": "Відкрити коментарі PR",
   "gitView.pr.actions.reply": "Відповісти",
   "gitView.pr.actions.replyAria": "Відповісти на коментар",
   "gitView.pr.actions.openOnGitHub": "Відкрити на GitHub",

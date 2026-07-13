@@ -712,8 +712,6 @@ export const dict = {
   'gitView.pr.actions.mergePrAria': 'Fusionner la PR',
   'gitView.pr.actions.openChecks': 'Chèques ouverts',
   'gitView.pr.actions.openChecksAria': 'Ouvrir les chèques échoués',
-  'gitView.pr.actions.openComments': 'Commentaires ouverts',
-  'gitView.pr.actions.openCommentsAria': 'Ouvrir les commentaires de la PR',
   'gitView.pr.actions.openOnGitHub': 'Ouvert sur GitHub',
   'gitView.pr.actions.openOnGitHubAria': 'Ouvrir la PR sur GitHub',
   'gitView.pr.actions.openSettings': 'Ouvrir les paramètres',

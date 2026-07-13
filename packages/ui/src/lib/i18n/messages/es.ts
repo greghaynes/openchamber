@@ -881,8 +881,6 @@ export const dict: Record<I18nKey, string> = {
   "gitView.pr.actions.mergePrAria": "Hacer merge de la PR",
   "gitView.pr.actions.openChecks": "Abrir checks",
   "gitView.pr.actions.openChecksAria": "Abrir checks fallidos",
-  "gitView.pr.actions.openComments": "Abrir comentarios",
-  "gitView.pr.actions.openCommentsAria": "Abrir comentarios de la PR",
   "gitView.pr.actions.openOnGitHub": "Abrir en GitHub",
   "gitView.pr.actions.openOnGitHubAria": "Abrir PR en GitHub",
   "gitView.pr.actions.openSettings": "Abrir configuración",

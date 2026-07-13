@@ -880,8 +880,6 @@ export const dict: Record<I18nKey, string> = {
   'gitView.pr.actions.mergePrAria': 'PR 병합',
   'gitView.pr.actions.openChecks': '체크 열기',
   'gitView.pr.actions.openChecksAria': '실패한 검사 열기',
-  'gitView.pr.actions.openComments': '댓글 열기',
-  'gitView.pr.actions.openCommentsAria': 'PR 댓글 열기',
   'gitView.pr.actions.reply': '답글',
   'gitView.pr.actions.replyAria': '댓글에 답글 달기',
   'gitView.pr.actions.openOnGitHub': 'GitHub에서 열기',

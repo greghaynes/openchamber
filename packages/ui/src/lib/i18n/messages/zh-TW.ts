@@ -892,8 +892,6 @@ export const dict: Record<I18nKey, string> = {
   'gitView.pr.actions.mergePrAria': '合併 Pull Request',
   'gitView.pr.actions.openChecks': '開啟檢查',
   'gitView.pr.actions.openChecksAria': '開啟失敗的檢查',
-  'gitView.pr.actions.openComments': '開啟留言',
-  'gitView.pr.actions.openCommentsAria': '開啟 Pull Request 留言',
   'gitView.pr.actions.reply': '回覆',
   'gitView.pr.actions.replyAria': '回覆留言',
   'gitView.pr.actions.openOnGitHub': '在 GitHub 中開啟',
